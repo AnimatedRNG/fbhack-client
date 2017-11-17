@@ -198,13 +198,14 @@ public class Constellation {
 				System.out.println("myId: " + myID);
 				response.remove(0);
 
-				for (String friendID : response) {
+                for (int i=2;i<response.size();i+=2){
+                    String friendID=response.get(i)
+                    double weight=Double.parseDouble(response.get(i+1))
 					networkRequests.add(new ConstellationRequest(
 						ConstellationRequest.RequestType.GET_FRIEND_INFO, 
 						friendID));
-					
-					
-					pendingEdges.add(new IDPair(myID, friendID));
+
+					pendingEdges.add(new IDPair(myID, friendID, weight));
 
 					System.out.println("friendID: " + friendID);					
 				}
@@ -297,10 +298,11 @@ public class Constellation {
 	class IDPair {
 		public final String first;
 		public final String second;
-		
-		public IDPair(String first, String second) {
+		public final weight
+		public IDPair(String first, String second,double weight) {
 			this.first = first;
 			this.second = second;
+			this.weight = weight;
 		}
 		
 		@Override
@@ -311,6 +313,9 @@ public class Constellation {
 			IDPair castOther = (IDPair) other;
 			return (this.first.equals(castOther.first) && this.second.equals(castOther.second)) ||
 					(this.first.equals(castOther.second) && this.second.equals(castOther.first));
+		}
+		public double getWeight(){
+		    return weight;
 		}
 		
 		@Override

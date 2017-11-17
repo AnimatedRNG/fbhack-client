@@ -27,7 +27,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 public class Constellation {
-	public static final float TOO_CLOSE = 1.5f;
+	public static final float TOO_CLOSE = 1.2f;
 	
 	public Map<String, Vertex> vertices;
 	public List<Edge> edges;

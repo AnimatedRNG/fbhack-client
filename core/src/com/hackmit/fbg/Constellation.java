@@ -43,6 +43,9 @@ public class Constellation {
 	
 	public void render(ModelBatch batch) {
 		for (Vertex vertex : this.vertices) {
+			if (vertex.photo != null) {
+				vertex.photo.bind();
+			}
 			batch.render(new ModelInstance(vertex.model));
 		}
 		

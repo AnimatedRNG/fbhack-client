@@ -25,7 +25,7 @@ public class Edge {
 	}
 	
 	public void create() {
-		Vector3 offset = new Vector3(0.0f, 0.5f, 0.5f);
+		Vector3 offset = new Vector3(0.0f, 0.0f, 0.0f);
 		Vector3 start = new Vector3(v1.position).add(offset);
         Vector3 end = new Vector3(v2.position).add(offset);
         

@@ -1,5 +1,7 @@
 package com.hackmit.fbg;
 
+import java.io.UnsupportedEncodingException;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -59,6 +61,10 @@ public class GalaxyRenderer extends ApplicationAdapter {
         /*test.nodes.get(0).rotation.set(new Quaternion().setFromCross(
         		new Vector3(1, 0, 0),
         		new Vector3(cam.position).nor()));*/
+        
+        if (constellation.updateMe == true) {
+        	constellation.update();
+        }
         
         modelBatch.begin(cam);
         this.constellation.render(modelBatch);

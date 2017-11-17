@@ -17,16 +17,30 @@ import com.badlogic.gdx.math.Vector3;
 public class Vertex {
 
 	public String name;
+	
 	public Texture photo;
+	public WebTexture webPhoto;
+	
+	public String ID;
 	
 	public Vector3 position;
 	
 	public Model model;
 	public boolean isReady;
 	
-	public Vertex(String name, Texture photo) {
+	public Vertex(String name, WebTexture photo, String ID) {
+		this.name = name;
+		this.webPhoto = photo;
+		this.ID = ID;
+		
+		this.model = null;
+		this.isReady = false;
+	}
+	
+	public Vertex(String name, Texture photo, String ID) {
 		this.name = name;
 		this.photo = photo;
+		this.ID = ID;
 		
 		this.model = null;
 		this.isReady = false;
@@ -48,9 +62,12 @@ public class Vertex {
 	}
 	
 	public void create(Vector3 location) {
+		Texture actualPhoto = photo;
+		if (actualPhoto == null) {
+			photo = webPhoto.getTexture();
+		}
+		
 		ModelBuilder modelBuilder = new ModelBuilder();
-		//Material quadMaterial = new Material(ColorAttribute.createDiffuse(Color.GREEN));
-		//Material quadMaterial = new Material();
 		Material quadMaterial = new Material(TextureAttribute.createDiffuse(photo));
 		quadMaterial.set(IntAttribute.createCullFace(GL20.GL_NONE));
 		
@@ -62,13 +79,6 @@ public class Vertex {
 				modelBuilder.part("quad", GL20.GL_TRIANGLES, attributes, quadMaterial);
 		meshBuilder.addMesh(createFullScreenQuad());
 		model = modelBuilder.end();
-		
-		/*model = modelBuilder.createRect(0, 0, 0, // (0, 0) 
-        								0, 0, 1, // (0, 1)
-        								0, 1, 1, // (1, 1)
-        								0, 1, 0, // (1, 0)
-        								1, 0, 0, // Normal
-        		quadMaterial, attributes);*/
 		
 		model.nodes.get(0).translation.set(location);
 		this.position = location;

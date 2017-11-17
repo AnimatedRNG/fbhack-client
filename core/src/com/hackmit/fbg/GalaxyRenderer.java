@@ -8,12 +8,15 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.math.Vector3;
 
 public class GalaxyRenderer extends ApplicationAdapter implements InputProcessor {
 	private PerspectiveCamera cam;
 	private CameraInputController camController;
 	private ModelBatch modelBatch;
 	private Constellation constellation;
+
+	int t = 0;
 	
 	Texture img;	
 	
@@ -49,12 +52,10 @@ public class GalaxyRenderer extends ApplicationAdapter implements InputProcessor
         /*test.nodes.get(0).rotation.set(new Quaternion().setFromCross(
         		new Vector3(1, 0, 0),
         		new Vector3(cam.position).nor()));*/
-        
+
         if (constellation.updateMe == true) {
         	constellation.update();
         }
-        
-        this.constellation.pick(cam.getPickRay(1920 / 2, 1080 / 2));
         
         modelBatch.begin(cam);
         this.constellation.render(modelBatch);

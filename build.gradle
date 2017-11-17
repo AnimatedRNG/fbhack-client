@@ -1,6 +1,5 @@
 buildscript {
     
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -8,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         
 
     }
@@ -57,14 +56,25 @@ project(":android") {
 
     dependencies {
         compile project(":core")
+        compile "de.tomgrill.gdxdialogs:gdx-dialogs-android:1.2.5"
+
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile 'com.android.support:appcompat-v7:26.+'
+        compile 'com.android.support:design:26.+'
+
+        // ARCore dependency
+        compile(name: 'arcore_client', ext: 'aar')
+
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+
+        /* Don't include these since they are not supported by ARCore.
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-        compile "de.tomgrill.gdxdialogs:gdx-dialogs-android:1.2.5"
-        
+        */
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
     }
 }
 

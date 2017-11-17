@@ -1,3 +1,9 @@
+repositories {
+    flatDir {
+        dirs "../arcore-android-sdk/libraries"
+    }
+}
+
 android {
     lintOptions {
         abortOnError false
@@ -23,7 +29,7 @@ android {
     }
     defaultConfig {
         applicationId "com.hackmit.fbg"
-        minSdkVersion 9
+        minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -36,6 +42,37 @@ android {
     }
 }
 
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:design:26.+'
+
+    // ARCore dependency
+    compile(name: 'arcore_client', ext: 'aar')
+
+    compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+
+    /* Don't include these since they are not supported by ARCore.
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+    */
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+
+    /* This sample does not use physics, but it is included for completeness. */
+    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
+
+    /* exclude unsupported platforms.
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+    */
+}
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders

@@ -27,7 +27,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 public class Constellation {
-	public static final float TOO_CLOSE = 1.2f;
+	public static final float TOO_CLOSE = 0.08f;
 	
 	public Map<String, Vertex> vertices;
 	public List<Edge> edges;
@@ -42,7 +42,13 @@ public class Constellation {
 	public Texture tmp;
 	
 	public boolean updateMe = false;
-	
+
+	public Constellation(Vector3 roomOrigin, Vector3 roomSize) {
+		this();
+		this.roomOrigin = roomOrigin;
+		this.roomSize = roomSize;
+	}
+
 	public Constellation() {
 		this.vertices = new HashMap<String, Vertex>();
 		this.edges = new ArrayList<Edge>();
@@ -106,8 +112,18 @@ public class Constellation {
 			return url;
 		}
 	}
-	
+
 	public void update() {
+		update(roomOrigin);
+	}
+
+	public void update(Vector3 newOrigin) {
+		Vector3 oldOrigin = this.roomOrigin;
+		this.roomOrigin = newOrigin;
+
+		System.out.println("New origin: " + newOrigin);
+		System.out.println("Old origin: " + oldOrigin);
+
 		while (!this.pendingVertices.isEmpty()) {
 			Vertex newVertex = this.pendingVertices.poll();
 			System.out.println("Added new vertex " + newVertex.ID);
@@ -131,12 +147,18 @@ public class Constellation {
 			if (!vertex.isReady) {
 				vertex.create(findEmptyLocation());
 				System.out.println("Vertex: " + vertex.toString());
+			} else if (!newOrigin.equals(oldOrigin)) {
+				Vector3 offset = new Vector3(oldOrigin).sub(newOrigin);
+				vertex.position.add(offset);
+				vertex.model.nodes.get(0).translation.add(offset);
 			}
 		}
 		
 		System.out.println("Size of edges " + edges.size());
 		for (Edge edge : this.edges) {
 			if (!edge.isReady) {
+				edge.create();
+			} else if (!newOrigin.equals(oldOrigin)) {
 				edge.create();
 			}
 		}
@@ -147,7 +169,8 @@ public class Constellation {
 			if (vertex.photo != null) {
 				vertex.photo.bind();
 			}
-			batch.render(new ModelInstance(vertex.model));
+			ModelInstance instance = new ModelInstance(vertex.model);
+			batch.render(instance);
 		}
 		
 		for (Edge edge : this.edges) {

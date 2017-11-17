@@ -40,6 +40,7 @@ public class Constellation {
 	public Queue<ConstellationRequest> networkRequests;
 	public Set<ConstellationRequest> oldRequests;
 	public Texture tmp;
+	public Texture badlogic;
 	
 	public boolean updateMe = false;
 
@@ -61,6 +62,7 @@ public class Constellation {
 		vertices.put("matthew.pfeiffer2", new Vertex("Matthew Pfeiffer", new Texture("badlogic.jpg"), "matthew.pfeiffer2"));
 		
 		tmp = new Texture("badlogic.jpg");
+		badlogic = new Texture("badlogic.jpg");
 		
 		this.networkRequests.add(new ConstellationRequest(
 				ConstellationRequest.RequestType.GET_FRIENDS,
@@ -214,7 +216,7 @@ public class Constellation {
 				String name = response.get(0);
 				String photoURL = response.get(1);
 				if (photoURL.equals("none")) {
-					pendingVertices.add(new Vertex(name, new Texture("badlogic.jpg"), head.data));
+					pendingVertices.add(new Vertex(name, badlogic, head.data));
 				} else {
 					pendingVertices.add(new Vertex(name, new WebTexture(photoURL, tmp), head.data));
 				}

@@ -37,7 +37,6 @@ public class Constellation {
 	public Vector3 roomSize = new Vector3(5, 5, 5);
 	
 	public Queue<ConstellationRequest> networkRequests;
-	public Texture badlogic;
 	public Texture tmp;
 	
 	public boolean updateMe = false;
@@ -50,16 +49,13 @@ public class Constellation {
 		
 		this.networkRequests = new ConcurrentLinkedQueue<ConstellationRequest>();
 		
-		vertices.put("1", new Vertex("test", new Texture("badlogic.jpg"), "1"));
-		vertices.put("4", new Vertex("test2", new Texture("badlogic.jpg"), "4"));
-		edges.add(new Edge(vertices.get("1"), vertices.get("4")));
+		vertices.put("matthew.pfeiffer2", new Vertex("Matthew Pfeiffer", new Texture("badlogic.jpg"), "matthew.pfeiffer2"));
 		
-		badlogic = new Texture("badlogic.jpg");
 		tmp = new Texture("badlogic.jpg");
 		
 		this.networkRequests.add(new ConstellationRequest(
 				ConstellationRequest.RequestType.GET_FRIENDS,
-				encodeURL("Matthew Pfeiffer")));
+				encodeURL("matthew.pfeiffer2")));
 		
 		new Thread(new Runnable() {
 			@Override
@@ -72,7 +68,12 @@ public class Constellation {
 	public void networkUpdate() {
 		while (true) {
 			final ConstellationRequest head = this.networkRequests.poll();
-			if (head != null) {
+			if (head != null)
+				System.out.println("Current head: " + head.data);
+			if (head != null && 
+					(!vertices.containsKey(head.data) ||
+					head.type.equals(ConstellationRequest.RequestType.GET_FRIENDS) ||
+					vertices.size() == 1)) {
 				String url = "http://35.185.60.3";
 				
 				if (head.type.equals(ConstellationRequest.RequestType.GET_FRIENDS)) {
@@ -178,14 +179,13 @@ public class Constellation {
 				assert(response.size() == 2);
 				String name = response.get(0);
 				String photoURL = response.get(1);
-				photoURL = "https://m.media-amazon.com/images/S/aplus-seller-content-images-us-east-1/ATVPDKIKX0DER/ANGIJ9SDJJSQC/B072J7MV6V/3XjD1SWwT66G._UX300_TTW__.png";
-				if (photoURL.equals("none") && !vertices.containsKey(head.data)) {
-					pendingVertices.add(new Vertex(name, badlogic, head.data));
+				if (photoURL.equals("none")) {
+					pendingVertices.add(new Vertex(name, new Texture("badlogic.jpg"), head.data));
 				} else {
 					pendingVertices.add(new Vertex(name, new WebTexture(photoURL, tmp), head.data));
 				}
 				
-				
+				System.out.println("Photo url: " + photoURL);
 				
 				updateMe = true;
 			}
@@ -249,6 +249,7 @@ public class Constellation {
         }
         
         if (result != null) {
+        	System.out.println("Adding a network request for person " + result.ID);
         	networkRequests.add(new ConstellationRequest(
         		ConstellationRequest.RequestType.GET_FRIENDS,
         		result.ID));

@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,9 +35,10 @@ public class Constellation {
 	public Queue<Vertex> pendingVertices;
 	
 	public Vector3 roomOrigin = new Vector3(0, 0, 0);
-	public Vector3 roomSize = new Vector3(5, 5, 5);
+	public Vector3 roomSize = new Vector3(20, 20, 20);
 	
 	public Queue<ConstellationRequest> networkRequests;
+	public Set<ConstellationRequest> oldRequests;
 	public Texture tmp;
 	
 	public boolean updateMe = false;
@@ -48,6 +50,7 @@ public class Constellation {
 		this.pendingVertices = new ConcurrentLinkedQueue<Vertex>();
 		
 		this.networkRequests = new ConcurrentLinkedQueue<ConstellationRequest>();
+		this.oldRequests = new HashSet<ConstellationRequest>();
 		
 		vertices.put("matthew.pfeiffer2", new Vertex("Matthew Pfeiffer", new Texture("badlogic.jpg"), "matthew.pfeiffer2"));
 		
@@ -88,7 +91,10 @@ public class Constellation {
 				HttpRequest httpGet = new HttpRequest(HttpMethods.GET);
 				httpGet.setUrl(url);
 				
-				Gdx.net.sendHttpRequest(httpGet, new ConstellationHttpResponseHandler(head));
+				if (!oldRequests.contains(head)) {
+					Gdx.net.sendHttpRequest(httpGet, new ConstellationHttpResponseHandler(head));
+					oldRequests.add(head);
+				}
 			}
 		}
 	}
@@ -168,8 +174,10 @@ public class Constellation {
 
 				for (String friendID : response) {
 					networkRequests.add(new ConstellationRequest(
-							ConstellationRequest.RequestType.GET_FRIEND_INFO, 
-							friendID));
+						ConstellationRequest.RequestType.GET_FRIEND_INFO, 
+						friendID));
+					
+					
 					pendingEdges.add(new IDPair(myID, friendID));
 
 					System.out.println("friendID: " + friendID);					
@@ -184,6 +192,10 @@ public class Constellation {
 				} else {
 					pendingVertices.add(new Vertex(name, new WebTexture(photoURL, tmp), head.data));
 				}
+				
+				networkRequests.add(new ConstellationRequest(
+						ConstellationRequest.RequestType.GET_FRIENDS, 
+						head.data));
 				
 				System.out.println("Photo url: " + photoURL);
 				

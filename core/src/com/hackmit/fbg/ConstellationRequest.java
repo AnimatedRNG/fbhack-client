@@ -13,4 +13,19 @@ public class ConstellationRequest {
 		this.type = type;
 		this.data = data;
 	}
+	
+	@Override
+	public int hashCode() {
+		return type.hashCode() * data.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ConstellationRequest)) {
+			return false;
+		} else {
+			ConstellationRequest con = (ConstellationRequest) obj;
+			return con.type == this.type && con.data == this.data;
+		}
+	}
 }

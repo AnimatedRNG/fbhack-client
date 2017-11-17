@@ -51,12 +51,12 @@ public class Vertex {
                 new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
                 new VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"));
 
-        mesh.setVertices(new float[] { 0, -0.5f, -0.5f, 0, 0,
+        mesh.setVertices(new float[] { 0, -0.5f, -0.5f, 1, 1,
                                        0, 0.5f, -0.5f, 1, 0,
-                                       0, 0.5f, 0.5f, 1, 1,
+                                       0, 0.5f, 0.5f, 0, 0,
                                        0, -0.5f, 0.5f, 0, 1 });
                                        
-        mesh.setIndices(new short[] { 0, 1, 2, 0, 2, 3 });
+        mesh.setIndices(new short[] { 2, 0, 1, 3, 0, 2 });
         
         return mesh;
 	}

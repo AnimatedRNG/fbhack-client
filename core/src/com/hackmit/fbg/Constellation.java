@@ -7,7 +7,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.gdx.Gdx;
@@ -18,7 +20,10 @@ import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 
 public class Constellation {
 	public static final float TOO_CLOSE = 1.5f;
@@ -173,7 +178,8 @@ public class Constellation {
 				assert(response.size() == 2);
 				String name = response.get(0);
 				String photoURL = response.get(1);
-				if (photoURL.equals("none")) {
+				photoURL = "https://m.media-amazon.com/images/S/aplus-seller-content-images-us-east-1/ATVPDKIKX0DER/ANGIJ9SDJJSQC/B072J7MV6V/3XjD1SWwT66G._UX300_TTW__.png";
+				if (photoURL.equals("none") && !vertices.containsKey(head.data)) {
 					pendingVertices.add(new Vertex(name, badlogic, head.data));
 				} else {
 					pendingVertices.add(new Vertex(name, new WebTexture(photoURL, tmp), head.data));
@@ -219,6 +225,34 @@ public class Constellation {
 			}
 		}
 		return testVertex;
+	}
+	
+	public void pick(Ray ray) {
+		Vertex result = null;
+        float distance = Float.MAX_VALUE;
+        Set<Entry<String, Vertex>> entrySet = vertices.entrySet();
+        for (Entry<String, Vertex> entry : entrySet) {
+            final Vertex instance = entry.getValue();
+            
+            Vector3 intersection = new Vector3();
+            if (Intersector.intersectRayPlane(ray, 
+            		new Plane(new Vector3(1, 0, 0), instance.position), 
+            		intersection)) {
+            	float dist1 = ray.origin.dst(intersection);
+            	float dist2 = intersection.dst(instance.position);
+            	
+            	if (dist2 < 1 && dist1 < distance) {
+            		result = instance;
+            		distance = dist1;
+            	}
+            }
+        }
+        
+        if (result != null) {
+        	networkRequests.add(new ConstellationRequest(
+        		ConstellationRequest.RequestType.GET_FRIENDS,
+        		result.ID));
+        }
 	}
 	
 	class IDPair {

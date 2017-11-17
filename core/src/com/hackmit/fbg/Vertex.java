@@ -51,7 +51,7 @@ public class Vertex {
                 new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
                 new VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"));
 
-		float size = 0.04f;
+		float size = 0.08f;
         mesh.setVertices(new float[] { 0, -size, -size, 1, 1,
                                        0, size, -size, 1, 0,
                                        0, size, size, 0, 0,

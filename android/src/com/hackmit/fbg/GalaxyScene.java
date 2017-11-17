@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.ShaderProvider;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.github.claywilkinson.arcore.gdx.ARCoreScene;
 import com.github.claywilkinson.arcore.gdx.PlaneAttachment;
 import com.github.claywilkinson.arcore.gdx.SimpleShaderProvider;
@@ -31,10 +32,29 @@ import java.util.Collections;
 public class GalaxyScene extends ARCoreScene {
 
     private Constellation constellation;
+    private boolean renderNow;
 
     @Override
     public void create() {
         super.create();
+
+        new Timer().scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                if (constellation == null) {
+                    // Check whether we should create the constellation or not;
+                    // do we have an anchor
+                } else {
+                    // Update the constellation to the right position
+                    if (constellation.updateMe) {
+                        constellation.update();
+                    }
+
+                    renderNow = true;
+                    //constellation.render(modelBatch);
+                }
+            }
+        }, 1f, 1f);
     }
 
     /** Create a new shader provider that is aware of the Plane material custom shader. */
@@ -87,12 +107,12 @@ public class GalaxyScene extends ARCoreScene {
                                     new Vector3(frame.getPose().tx(), frame.getPose().ty(), frame.getPose().tz());
                             Vector3 pos =
                                     new Vector3(p.tx(),p.ty(),p.tz());
-                            pos.add(new Vector3(0, 0, 1.5f));
+                            pos.add(new Vector3(0, 1.7f, 0f));
                             //item.transform.translate(pos);
                             if (constellation == null) {
                                 Log.w("HelloScene", "Created constellation!");
                                 constellation = new Constellation(pos,
-                                        new Vector3(3, 3, 1f));
+                                        new Vector3(5, 1.3f, 5f));
                             }
                             constellation.update(pos);
                         } catch (NotTrackingException e) {
@@ -113,16 +133,7 @@ public class GalaxyScene extends ARCoreScene {
         drawPlanes(modelBatch);
 
         handleInput(frame);
-
-        if (constellation == null) {
-            // Check whether we should create the constellation or not;
-            // do we have an anchor
-        } else {
-            // Update the constellation to the right position
-            if (constellation.updateMe) {
-                constellation.update();
-            }
-
+        if (renderNow) {
             this.constellation.render(modelBatch);
         }
     }

@@ -34,8 +34,8 @@ public class Constellation {
 	public Queue<IDPair> pendingEdges;
 	public Queue<Vertex> pendingVertices;
 	
-	public Vector3 roomOrigin = new Vector3(0, 0, 0);
-	public Vector3 roomSize = new Vector3(20, 20, 20);
+	public Vector3 roomOrigin = new Vector3(0, 3, 0);
+	public Vector3 roomSize = new Vector3(20, 2.5f, 20);
 	
 	public Queue<ConstellationRequest> networkRequests;
 	public Set<ConstellationRequest> oldRequests;
@@ -65,6 +65,9 @@ public class Constellation {
 		this.networkRequests.add(new ConstellationRequest(
 				ConstellationRequest.RequestType.GET_FRIENDS,
 				encodeURL("matthew.pfeiffer2")));
+		this.networkRequests.add(new ConstellationRequest(
+				ConstellationRequest.RequestType.GET_FRIEND_INFO,
+				encodeURL("matthew.pfeiffer2")));
 		
 		new Thread(new Runnable() {
 			@Override
@@ -82,7 +85,7 @@ public class Constellation {
 			if (head != null && 
 					(!vertices.containsKey(head.data) ||
 					head.type.equals(ConstellationRequest.RequestType.GET_FRIENDS) ||
-					vertices.size() == 1)) {
+					vertices.size() <= 2)) {
 				String url = "http://35.185.60.3";
 				
 				if (head.type.equals(ConstellationRequest.RequestType.GET_FRIENDS)) {

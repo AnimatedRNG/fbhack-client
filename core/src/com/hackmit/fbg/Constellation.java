@@ -196,7 +196,7 @@ public class Constellation {
 				// If we are querying for friends
 				String myID = response.get(0);
 				System.out.println("myId: " + myID);
-				response.remove(0);
+				//response.remove(0);
 
                 for (int i=2;i<response.size();i+=2){
                     String friendID=response.get(i)

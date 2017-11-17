@@ -23,6 +23,7 @@ public class GalaxyRenderer extends ApplicationAdapter {
 	private PerspectiveCamera cam;
 	private CameraInputController camController;
 	private ModelBatch modelBatch;
+	private Constellation constellation;
 	
 	private Model test;
 	private Model line;
@@ -32,6 +33,9 @@ public class GalaxyRenderer extends ApplicationAdapter {
 	@Override
 	public void create () {
 		modelBatch = new ModelBatch();
+		
+		this.constellation = new Constellation();
+		this.constellation.update();
 		
 		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(10f, 10f, 10f);
@@ -50,10 +54,10 @@ public class GalaxyRenderer extends ApplicationAdapter {
             new Material(ColorAttribute.createDiffuse(Color.GREEN)),
             Usage.Position | Usage.Normal);
         model = modelBuilder.createRect(0, 0, 0, // (0, 0) 
-        								0, 1, 0, // (0, 1)
-        								1, 1, 0, // (1, 1)
-        								1, 0, 0, // (1, 0)
-        								0, 0, 1, // Normal
+        								0, 0, 1, // (0, 1)
+        								0, 1, 1, // (1, 1)
+        								0, 1, 0, // (1, 0)
+        								-1, 0, 0, // Normal
         		quadMaterial, Usage.Position | Usage.Normal);
         line = createLine(
         		new Vector3(0, 0, 0), 
@@ -80,16 +84,20 @@ public class GalaxyRenderer extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        Gdx.gl.glDepthFunc(GL20.GL_LESS);
         
         camController.update();
         
-        test.nodes.get(0).rotation.set(new Quaternion().setFromCross(
-        		new Vector3(0, 0, 1),
-        		new Vector3(cam.position).nor()));
+        /*test.nodes.get(0).rotation.set(new Quaternion().setFromCross(
+        		new Vector3(1, 0, 0),
+        		new Vector3(cam.position).nor()));*/
+        //test.nodes.get(0).translation.set(new Vector3(2, 2, 2));
         
         modelBatch.begin(cam);
-        modelBatch.render(new ModelInstance(test));
-        modelBatch.render(new ModelInstance(line));
+        //modelBatch.render(new ModelInstance(test));
+        //modelBatch.render(new ModelInstance(line));
+        this.constellation.render(modelBatch);
         modelBatch.end();
 	}
 	

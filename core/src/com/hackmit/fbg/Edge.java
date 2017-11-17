@@ -10,23 +10,25 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Edge {
 
-	public Vector3 v1;
-	public Vector3 v2;
+	public Vertex v1;
+	public Vertex v2;
 	
 	public Model model;
 	public boolean isReady;
 	
-	public Edge(Vector3 v1, Vector3 v2) {
-		this.v1 = new Vector3(v1); 
-		this.v2 = new Vector3(v2);
+	public Edge(Vertex v1, Vertex v2) {
+		this.v1 = v1; 
+		this.v2 = v2;
 		
 		this.model = null;
 		this.isReady = false;
 	}
 	
 	public void create() {
-		Vector3 start = new Vector3(0, 0, 0); 
-        Vector3 end = new Vector3(3, 1, 1);
+		Vector3 offset = new Vector3(0.0f, 0.5f, 0.5f);
+		Vector3 start = new Vector3(v1.position).add(offset);
+        Vector3 end = new Vector3(v2.position).add(offset);
+        
         Material mat = new Material(ColorAttribute.createDiffuse(Color.GREEN));
 		
 		ModelBuilder modelBuilder = new ModelBuilder();

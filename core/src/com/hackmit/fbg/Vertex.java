@@ -1,11 +1,13 @@
 package com.hackmit.fbg;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.IntAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 
@@ -30,6 +32,7 @@ public class Vertex {
 	public void create(Vector3 location) {
 		ModelBuilder modelBuilder = new ModelBuilder();
 		Material quadMaterial = new Material(ColorAttribute.createDiffuse(Color.GREEN));
+		quadMaterial.set(IntAttribute.createCullFace(GL20.GL_NONE));
 		model = modelBuilder.createRect(0, 0, 0, // (0, 0) 
         								0, 0, 1, // (0, 1)
         								0, 1, 1, // (1, 1)
@@ -38,7 +41,13 @@ public class Vertex {
         		quadMaterial, Usage.Position | Usage.Normal);
 		
 		model.nodes.get(0).translation.set(location);
+		this.position = location;
 		
 		isReady = true;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name + " " + position.toString();
 	}
 }

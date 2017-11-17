@@ -25,9 +25,6 @@ public class GalaxyRenderer extends ApplicationAdapter {
 	private ModelBatch modelBatch;
 	private Constellation constellation;
 	
-	private Model test;
-	private Model line;
-	
 	Texture img;	
 	
 	@Override
@@ -47,37 +44,7 @@ public class GalaxyRenderer extends ApplicationAdapter {
 		camController = new CameraInputController(cam);
         Gdx.input.setInputProcessor(camController);
         
-        ModelBuilder modelBuilder = new ModelBuilder();
-        Material quadMaterial = new Material(ColorAttribute.createDiffuse(Color.GREEN));
-        quadMaterial.set(IntAttribute.createCullFace(GL20.GL_NONE));
-        Model model = modelBuilder.createBox(5f, 5f, 5f, 
-            new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-            Usage.Position | Usage.Normal);
-        model = modelBuilder.createRect(0, 0, 0, // (0, 0) 
-        								0, 0, 1, // (0, 1)
-        								0, 1, 1, // (1, 1)
-        								0, 1, 0, // (1, 0)
-        								-1, 0, 0, // Normal
-        		quadMaterial, Usage.Position | Usage.Normal);
-        line = createLine(
-        		new Vector3(0, 0, 0), 
-        		new Vector3(3, 1, 1),
-        		quadMaterial);
-        test = model;
-        
 		img = new Texture("badlogic.jpg");
-	}
-	
-	private Model createLine(
-			Vector3 start, 
-			Vector3 end, 
-			Material mat) {
-		ModelBuilder modelBuilder = new ModelBuilder();
-		modelBuilder.begin();
-		MeshPartBuilder builder = modelBuilder.part("line", 1, 3, mat);
-		builder.line(start, end);
-		Model model = modelBuilder.end();
-		return model;
 	}
 
 	@Override
@@ -92,11 +59,8 @@ public class GalaxyRenderer extends ApplicationAdapter {
         /*test.nodes.get(0).rotation.set(new Quaternion().setFromCross(
         		new Vector3(1, 0, 0),
         		new Vector3(cam.position).nor()));*/
-        //test.nodes.get(0).translation.set(new Vector3(2, 2, 2));
         
         modelBatch.begin(cam);
-        //modelBatch.render(new ModelInstance(test));
-        //modelBatch.render(new ModelInstance(line));
         this.constellation.render(modelBatch);
         modelBatch.end();
 	}

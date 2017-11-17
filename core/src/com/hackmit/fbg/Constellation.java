@@ -192,6 +192,7 @@ public class Constellation {
 			System.out.println("Response: " + resultAsString);
 			List<String> response = new ArrayList<String>(Arrays.asList(
 						resultAsString.split("\\s*,\\s*")));
+			response = response.subList(0, Math.min(20, response.size()));
 			if (head.type.equals(ConstellationRequest.RequestType.GET_FRIENDS)) {
 				// If we are querying for friends
 				String myID = response.get(0);
@@ -202,8 +203,7 @@ public class Constellation {
 					networkRequests.add(new ConstellationRequest(
 						ConstellationRequest.RequestType.GET_FRIEND_INFO, 
 						friendID));
-					
-					
+
 					pendingEdges.add(new IDPair(myID, friendID));
 
 					System.out.println("friendID: " + friendID);					
